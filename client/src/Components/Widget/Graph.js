@@ -5,7 +5,7 @@ import 'chart.js/auto';
 
 // loading env variable
 // require('dotenv').config();
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+const BACKEND_URL = process.env.REACT_APP_PUBLIC_IP
 
 const options = {
     scales: {
@@ -28,7 +28,7 @@ const Graph = ({valueToGraph}) => {
     function getValueLogs(valueID) {
         // fetch(`http://localhost:3001/get-value-logs/${valueID}`)
         console.log("BACKEND_URL", BACKEND_URL);
-        const url = `http://localhost/backend/get-value-logs/8`;
+        const url = `http://${BACKEND_URL}/backend/get-value-logs/8`;
         console.log("fetching from", url);
         fetch(url)
             .then(response => {
