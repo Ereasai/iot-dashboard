@@ -1,0 +1,6 @@
+{
+  "msg_type": "broker_log",
+  "time": "2021-10-11 18:40:33.394",
+  "topic": "TM/ALIVE/test_thing_71D9D51AB27A",
+  "payload": "AliveCycleReached"
+}

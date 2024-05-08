@@ -1,0 +1,9 @@
+{
+  "msg_type": "sensor_value",
+  "time": "2021-10-11 18:38:33.394",
+  "thing_name": "test_thing_71D9D51AB27A",
+  "value_name": "test_value_double",
+  "value": 3.0,
+  "value_min": 0.0,
+  "value_max": 1025.0
+}

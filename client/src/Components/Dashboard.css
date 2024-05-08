@@ -1,0 +1,19 @@
+.dashboard {
+    border: 2px solid #000000;    
+}
+
+.drag-handle {
+    background-color: #ddd;
+    min-height: 20px;
+    z-index: 1;
+    cursor: grab;
+    text-align: center;
+}
+
+.drag-handle:hover {
+    background-color: #a9a9a9;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}

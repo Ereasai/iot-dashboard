@@ -1,0 +1,58 @@
+{
+  "msg_type": "register_thing",
+  "thing_name": "test_thing_7C40060D0A0D",
+  "values": [
+    {
+      "name": "test_value_double",
+      "description": "No Information",
+      "type": "double",
+      "bound": {
+        "min_value": 0,
+        "max_value": 1025
+      },
+      "tags": [
+        {
+          "name": "test_thing_7C40060D0A0D"
+        }
+      ]
+    },
+    {
+      "name": "test_value_bool",
+      "description": "No Information",
+      "type": "bool",
+      "bound": {
+        "min_value": 0,
+        "max_value": 2
+      },
+      "tags": [
+        {
+          "name": "test_thing_7C40060D0A0D"
+        }
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "test_function",
+      "description": "No Information",
+      "return_type": "void",
+      "use_arg": 1,
+      "arguments": [
+        {
+          "name": "power",
+          "order": 0,
+          "type": "bool",
+          "bound": {
+            "min_value": 0,
+            "max_value": 2
+          }
+        }
+      ],
+      "tags": [
+        {
+          "name": "test_thing_7C40060D0A0D"
+        }
+      ]
+    }
+  ]
+}

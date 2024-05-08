@@ -1,0 +1,6 @@
+{
+  "msg_type": "add_tag",
+  "thing": "test_thing_71D9D51AB27A",
+  "service": "test_value_bool",
+  "tag": "light_on"
+}

@@ -1,0 +1,5 @@
+{
+  "msg_type": "broker_log",
+  "topic": "TM/UNREGISTER/test_thing_7C40060D0A0D",
+  "payload": ""
+}

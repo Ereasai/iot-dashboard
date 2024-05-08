@@ -1,0 +1,71 @@
+{
+  "services": [ {
+    "middleware" : "MySSIX-MW-test",
+    "hierarchy": "local",
+    "things": [
+    {
+      "id": "test_thing_71D9D51AB27A",
+      "is_alive": 1,
+      "values": [
+        {
+          "name": "test_value_double",
+          "description": "No Information",
+          "bound": {
+            "min_value": "0",
+            "max_value": "1025"
+          },
+          "type": "double",
+          "latest_val": "1",
+          "updated_on": "2021-06-25 18:38:33.394",
+          "format": "(null)",
+          "tags": [
+            {
+              "name": "test_thing_71D9D51AB27A"
+            }
+          ]
+        },
+        {
+          "name": "test_value_bool",
+          "description": "No Information",
+          "bound": {
+            "min_value": "0",
+            "max_value": "2"
+          },
+          "type": "bool",
+          "latest_val": "1",
+          "updated_on": "2021-06-25 18:38:33.478",
+          "format": "(null)",
+          "tags": [
+            {
+              "name": "test_thing_71D9D51AB27A"
+            }
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "test_function",
+          "description": "No Information",
+          "return_type": "void",
+          "use_arg": 1,
+          "arguments": [
+            {
+              "name": "power",
+              "order": 0,
+              "type": "bool",
+              "bound": {
+                "min_value": 0,
+                "max_value": 2
+              }
+            }
+          ],
+          "tags": [
+            {
+              "name": "test_thing_71D9D51AB27A"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}]}
