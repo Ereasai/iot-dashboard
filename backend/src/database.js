@@ -58,20 +58,49 @@ const getValueMetadata = async () => {
 
 const getValueLogs = async (valueID, timeStart, timeEnd) => {
 
-	const queryText = 
-		`SELECT * 
+	// const queryText = 
+	// 	`SELECT * 
+	// 	FROM value_logs
+	// 	WHERE created_at 
+	// 	BETWEEN (NOW() AT TIME ZONE 'Asia/Seoul' - INTERVAL '2 minute') 
+	// 	AND NOW() AT TIME ZONE 'Asia/Seoul'
+	// 	AND value_id = ${valueID}
+	// 	ORDER BY created_at`
+
+	console.log("!!! getValueLogs()")
+	console.log("valueID:", valueID)
+	console.log("timeStart:", timeStart)
+	console.log("timeEnd:", timeEnd)
+
+	let queryText = '';
+
+	// quick solution for real-time query.
+	if (timeStart == undefined || timeEnd == undefined) {
+		console.log(">>> Getting real-time data.");
+		queryText = `SELECT * 
 		FROM value_logs
 		WHERE created_at 
 		BETWEEN (NOW() AT TIME ZONE 'Asia/Seoul' - INTERVAL '2 minute') 
 		AND NOW() AT TIME ZONE 'Asia/Seoul'
 		AND value_id = ${valueID}
-		ORDER BY created_at`
+		ORDER BY created_at`;
+	}
+	else {
+		console.log(">>> Getting historic data");
+		queryText  = 
+		` SELECT *
+		FROM value_logs
+		WHERE created_at BETWEEN ${timeStart} AND ${timeEnd}
+		AND value_id = ${valueID}
+		ORDER BY created_at`;
+	}
 
 	try {
 		return await new Promise( (resolve, reject) => {
 			pool.query(queryText, (error, results) => {
 				if (error) reject(error)
 				if (results && results.rows) {
+					console.log("!!! success.")
 					resolve(results.rows);
 				} else {
 					reject(new Error("No results found"));

@@ -3,9 +3,9 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 
 import { useDashboard } from '../DashboardContext';
 
-import Graph from './Widget/Graph.js'
+// import Graph from './Widget/Graph.js'
 // import BarChart from './Widget/BarChart.js'
-
+import Widget from './Widget/Widget';
 import './Dashboard.css'
 
 const ResponsiveGridLayout = WidthProvider(Responsive);   
@@ -25,7 +25,7 @@ function Dashboard () {
                 return existingItem;
             }
             else {
-                return {i: widget.uid.toString(), content: widget.content}
+                return {...widget,i: widget.uid.toString()}
             }
         });
         setItems(newItems);
@@ -90,20 +90,24 @@ function Dashboard () {
     }
 
     const renderCharts = () => {
-        return items.map((item) => (
-            <div key={item.i}>
-                
-                <div style={{ height: '100%', background: '#ebebeb', display: "flex", flexDirection: "column" }}>
-                    <div className='drag-handle'>
-                        value_id: 8
-                    </div>
-                    {/* <h3>{`i: ${item.i}`}</h3>
-                    <p>{`${item.content}`}</p> */}
-                    <Graph />
-                </div>
+        return items.map((item) => {
+            console.log(item)
+            const timeRange = {start: item.startDate, end: item.endDate}
+            return (
+                <div key={item.i}>
 
-            </div>
-        ))
+                    {/* <div style={{ height: '100%', background: '#ebebeb', display: "flex", flexDirection: "column" }}>
+                    <div className='drag-handle'>
+                        i: {item.i}, 
+                        value_id: {item.valueID}
+                    </div>
+                    <Graph valueToGraph={item.valueID}/>
+                </div> */}
+                    <Widget valueID={item.valueID} plotType={item.plotType} isRealTime={item.isRealTime} timeRange={timeRange} />
+
+                </div>
+            )
+        })
     }
 
     return (

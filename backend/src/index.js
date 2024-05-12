@@ -6,7 +6,7 @@ const database = require('./database')
 
 app.use(express.json())
 app.use(function (req, res, next) {
-	res.setHeader("Access-Control-Allow-Origin", "localhost");
+	res.setHeader("Access-Control-Allow-Origin", "*");
 	res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
 	res.setHeader(
 	  "Access-Control-Allow-Headers",
@@ -15,7 +15,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
-// higher order function for handling requests/responses
+// higher order function for handling requests/responses + error
 const handleDatabaseOperation = (operation) => (req, res) => {
 	operation()
 	.then(response => {
