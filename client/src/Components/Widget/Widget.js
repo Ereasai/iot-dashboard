@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import LineChart from './LineChart';
+import TextChart from './TextChart';
+import GuageChart from './GaugeChart';
 
 const BACKEND_URL = process.env.REACT_APP_PUBLIC_IP
 
@@ -13,7 +15,7 @@ const BACKEND_URL = process.env.REACT_APP_PUBLIC_IP
  * Only does intervalic refreshing if isRealTime. 
  */
 
-const Widget = ({valueID, plotType, timeRange, isRealTime}) => {
+const Widget = ({valueID, plotType, timeRange, isRealTime, valueMetadata}) => {
 
     const [data, setData] = useState([]);
     const [isSuccess, setSuccess] = useState(false);
@@ -29,20 +31,21 @@ const Widget = ({valueID, plotType, timeRange, isRealTime}) => {
         
         const url = (isRealTime) ?  `http://${BACKEND_URL}/get-value-logs/${valueID}`
         : `http://${BACKEND_URL}/get-value-logs/${valueID}?timeStart=%27${encodeURIComponent(timeStart)}%27&timeEnd=%27${encodeURIComponent(timeEnd)}%27`;
-        console.log("fetching from", url);
         
+        // console.log("fetching from", url);
+
         fetch(url)
             .then(response => { 
                 return response.text();
             })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 const rawData = JSON.parse(data);
                 const timeseries = rawData.map((e, index) => {
-                    return {created_at : e.created_at, value_name : e.value_name, value : e.value, value_string: e.value_string}
+                    return {created_at : e.created_at, value_name : valueMetadata.value_name, value : e.value, value_string: e.value_string}
                 })
-                console.log("printing initially fetched data.");
-                console.log(timeseries);
+                // console.log("printing initially fetched data.");
+                // onsole.log(timeseries);
                 setData(timeseries);
                 setSuccess(true);
             })
@@ -65,6 +68,10 @@ const Widget = ({valueID, plotType, timeRange, isRealTime}) => {
         switch (plotType) {
             case 'line':
                 return <LineChart data={data}/>;
+            case 'text':
+                return <TextChart data={data}/>;
+            case 'gauge':
+                return <GuageChart data={data} min={valueMetadata.value_min} max={valueMetadata.value_max}/>
             default:
                 return <p>Unsupported plot type.</p>
         }
@@ -73,7 +80,7 @@ const Widget = ({valueID, plotType, timeRange, isRealTime}) => {
     return (
         <div style={{ height: '100%', background: '#ebebeb', display: "flex", flexDirection: "column" }}>
             <div className='drag-handle' />
-            {(isSuccess) ? renderChart() : <p>Query failed.</p>}
+            <div style={{height: '100%'}}>{(isSuccess) ? renderChart() : <p>Query failed.</p>}</div>
         </div>
     );
 }

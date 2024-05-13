@@ -60,6 +60,7 @@ function Dashboard () {
         cols: { lg: 20, /*md: 7, /*sm: 2, xs: 1, xxs: 1*/ },
         rowHeight: 100,
         compactType: 'vertical',
+        animate: false,
 
         // preventCollision: true,
 
@@ -91,7 +92,6 @@ function Dashboard () {
 
     const renderCharts = () => {
         return items.map((item) => {
-            console.log(item)
             const timeRange = {start: item.startDate, end: item.endDate}
             return (
                 <div key={item.i}>
@@ -103,7 +103,7 @@ function Dashboard () {
                     </div>
                     <Graph valueToGraph={item.valueID}/>
                 </div> */}
-                    <Widget valueID={item.valueID} plotType={item.plotType} isRealTime={item.isRealTime} timeRange={timeRange} />
+                    <Widget valueID={item.valueID} plotType={item.plotType} isRealTime={item.isRealTime} timeRange={timeRange} valueMetadata={item.valueMetadata}/>
 
                 </div>
             )
@@ -112,8 +112,8 @@ function Dashboard () {
 
     return (
         <>
-            {/*printLayouts()*/}
-            <ResponsiveGridLayout layouts={layouts} {...responsiveProps}>
+            {/*printLayouts() */ }
+            <ResponsiveGridLayout layouts={layouts} {...responsiveProps} animate={false}>
                 {renderCharts()}
             </ResponsiveGridLayout>
         </>

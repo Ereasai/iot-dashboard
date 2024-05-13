@@ -5,12 +5,20 @@ import 'chart.js/auto';
 
 const options = {
     scales: {
-        x: { type: 'time' },
+        x: { 
+            type: 'time',
+            ticks: {
+                maxRotation: 0,
+                minRotation: 0,
+                autoSkip: true,
+                maxTicksLimit: 4,
+            }
+        },
     },
 
     responsive: true,
     maintainAspectRatio: false,
-    animations: false, 
+    animation: false, 
 }
 
 const LineChart = ({data}) => {
@@ -33,7 +41,6 @@ const LineChart = ({data}) => {
         const ret = {
             datasets: Object.values(datasets),
         };
-        console.log(ret);
         setFormattedData(ret);
 
     }, [data]);

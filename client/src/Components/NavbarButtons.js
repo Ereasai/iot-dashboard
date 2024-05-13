@@ -17,6 +17,8 @@ export const NewWidgetPopup = ({onClose}) => {
         
         startDate: '',
         endDate: '',
+
+        valueMetadata: null
     });
 
     const [metadata, setMetadata] = useState({things: [], values: []});
@@ -69,6 +71,11 @@ export const NewWidgetPopup = ({onClose}) => {
     const handleSubmit = (e) => {
         e.preventDefault(); 
         console.log('Form Data Submitted:', formData);
+        
+        const value_metadata = metadata.values.find(item => item.value_id == formData.valueID);
+        // console.log("value_metadata", value_metadata)
+        formData.valueMetadata = value_metadata; // pass along value metadata 
+
         db.addWidget(formData); // update global state of widgets.
         onClose(); 
     };
@@ -113,7 +120,7 @@ export const NewWidgetPopup = ({onClose}) => {
                     <select name="plotType" value={formData.plotType} onChange={handleChange}>
                         <option value="">Select a chart type</option>
                         <option value="line">Line</option>
-                        <option value="bar">Bar</option>
+                        <option value="gauge">Gauge</option>
                         <option value="text">Text</option>
                     </select>
                 </label>
