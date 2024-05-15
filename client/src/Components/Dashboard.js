@@ -1,54 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-
 import { useDashboard } from '../DashboardContext';
 
 // import Graph from './Widget/Graph.js'
 // import BarChart from './Widget/BarChart.js'
 import Widget from './Widget/Widget';
+
+// TODO: reconfigure to meet style
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+
+// TODO: defines the widgets here? which is werid.
+// should be in the widgets.
 import './Dashboard.css'
+import WidgetSketch from './Widget/WidgetSketch';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);   
 
-function Dashboard () {
-
+const Dashboard = forwardRef((props, ref) => {
+    
     const [layouts, setLayouts] = useState({lg: []});
-    const [items, setItems] = useState([]);
-
-    // global (abstract) state of the dashboard
-    const {widgets, addWidget} = useDashboard();
+    
+    const {widgets, updateWidget} = useDashboard();
+    
+    useImperativeHandle(ref, () => ({
+        getLayouts: () => {
+            return layouts;
+        }
+    }));
 
     useEffect(() => {
-        const newItems = widgets.map(widget => {
-            const existingItem = items.find(item => item.i === widget.uid.toString());
-            if (existingItem) {
-                return existingItem;
-            }
-            else {
-                return {...widget,i: widget.uid.toString()}
-            }
-        });
-        setItems(newItems);
-
-        const newLayouts = {lg: null}
-
-        newLayouts.lg = widgets.map(widget => {
-            const existingLayout = layouts.lg.find(layout => layout.i === widget.uid.toString());
-            if (existingLayout) {
-                return existingLayout;
-            }
-            else {
+        // v3
+        console.group("Dashboard.useEffect()");
+        console.log("widgets:", widgets);
+        const newLayout = {
+            lg: widgets.map(widget => {
+                const existingLayout = layouts.lg.find(layout => layout.i === widget.id);
+                
+                // already exists. no need to modify.
+                if (existingLayout) return existingLayout;
+                
+                // create new layout.
                 return {
-                    i: widget.uid + "", // MUST BE STRING
-                    x: 0,
-                    y: Infinity, // bottom of the layout
-                    w: 2,
-                    h: 2
-                };
-            }
-        });
-        setLayouts(newLayouts);
+                    i: widget.id,
+                    x: widget.x || 0,
+                    y: (widget.y == undefined) ? Infinity : widget.y,
+                    w: widget.width || 2,
+                    h: widget.height || 3,
+                }
+            }),
+            // other breakpoints can be defined here.
+        };
+        console.log("newLayout",newLayout);
+        console.groupEnd();
+        setLayouts(newLayout);
     }, [widgets]);
+
+    const onLayoutChange = (layout, allLayouts) => {
+        // console.group("Dashboard.onLayoutChange()");
+        // console.log("layout:", layout);
+        // if (JSON.stringify(layouts.lg) === JSON.stringify(layout)) return;
+        // layout.forEach(layoutItem => {
+        //     const updatedWidget = {
+        //         ...widgets.find(item => item.id === layoutItem.i),
+        //         x: layoutItem.x,
+        //         y: layoutItem.y,
+        //         width: layoutItem.w,
+        //         height: layoutItem.h,
+        //     };
+        //     updateWidget(updatedWidget); 
+        // });
+        // console.groupEnd();
+        setLayouts(allLayouts);
+    };
     
 
 
@@ -60,16 +84,9 @@ function Dashboard () {
         cols: { lg: 20, /*md: 7, /*sm: 2, xs: 1, xxs: 1*/ },
         rowHeight: 100,
         compactType: 'vertical',
-        animate: false,
-
-        // preventCollision: true,
 
         draggableHandle: ".drag-handle",
-        onLayoutChange: (layout, layouts) => {
-            // console.log("onLayoutChange()")
-            // console.log(layouts)
-            setLayouts(layouts)
-        },
+        onLayoutChange: onLayoutChange,
         margin: [10, 10], // Margin between items
         containerPadding: [10, 10], // Padding inside the grid container
     };
@@ -91,10 +108,11 @@ function Dashboard () {
     }
 
     const renderCharts = () => {
-        return items.map((item) => {
+        return widgets.map((item) => {
+            // console.log("Dashboard.renderCharts(), item:", item)
             const timeRange = {start: item.startDate, end: item.endDate}
             return (
-                <div key={item.i}>
+                <div key={item.id}>
 
                     {/* <div style={{ height: '100%', background: '#ebebeb', display: "flex", flexDirection: "column" }}>
                     <div className='drag-handle'>
@@ -112,12 +130,14 @@ function Dashboard () {
 
     return (
         <>
-            {/*printLayouts() */ }
-            <ResponsiveGridLayout layouts={layouts} {...responsiveProps} animate={false}>
+            <ResponsiveGridLayout layouts={layouts} {...responsiveProps}>
                 {renderCharts()}
+                {/* <div key='hello'>
+                    <WidgetSketch/>
+                </div> */}
             </ResponsiveGridLayout>
         </>
     );
-}
+});
 
 export default Dashboard;

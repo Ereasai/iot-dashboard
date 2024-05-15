@@ -1,24 +1,52 @@
-import React, { useContext } from 'react';
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
+import React, { useContext, useState, useRef } from 'react';
 
-// import Grid from './GridComponents/Grid';
-// import ExampleGrid from './GridComponents/ExampleGrid';
-// import ResponsiveGrid from './GridComponents/ResponsiveGrid';
-import LeftNavBar from './Components/LeftNavBar.js'
-// import ComplexGrid from './GridComponents/ComplexGrid'
-import Dashboard from './Components/Dashboard'
 import { DashboardProvider } from './DashboardContext.js';
-import styles from './styles.js'
 
-function App() {
+import TopNavBar from './Components/TopNavBar.js';
+import Dashboard from './Components/Dashboard'
+import AddButton from './Components/AddButton.js';
+import AddPopup from './Components/AddPopup.js';
+
+import { SaveButton, LoadButton } from './Components/Testing.js'
+
+import { useTheme } from '@mui/material/styles';
+
+
+
+const App = () => {
+    const theme = useTheme();
+
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+    const dashboardRef = useRef(null); 
+    const getLayouts = () => {
+        console.log(dashboardRef.current.getLayouts());
+        return dashboardRef.current.getLayouts();
+    }
+
+    const handleAddClick = () => { setIsPopupOpen(true); };
+  
+    const handleClosePopup = () => { setIsPopupOpen(false); };
+
     return (
-        <div style={styles.app}>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: theme.palette.background.default}}>
             <DashboardProvider>
-                <LeftNavBar />
-                <div style={{width: "100%"}}>
-                    <Dashboard />
+                <TopNavBar />
+
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <SaveButton getLayouts={getLayouts} />
+                    <LoadButton />
                 </div>
+
+                <Dashboard ref={dashboardRef}/>
+                <AddButton
+                    onClick={handleAddClick}
+                    style={{ position: 'fixed', bottom: '20px', right: '20px' }}
+                />
+                <AddPopup
+                    open={isPopupOpen}
+                    onClose={handleClosePopup}
+                />
             </DashboardProvider>
         </div>
     );

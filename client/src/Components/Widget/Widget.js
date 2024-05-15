@@ -45,7 +45,7 @@ const Widget = ({valueID, plotType, timeRange, isRealTime, valueMetadata}) => {
                     return {created_at : e.created_at, value_name : valueMetadata.value_name, value : e.value, value_string: e.value_string}
                 })
                 // console.log("printing initially fetched data.");
-                // onsole.log(timeseries);
+                // console.log(timeseries);
                 setData(timeseries);
                 setSuccess(true);
             })

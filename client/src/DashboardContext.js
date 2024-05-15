@@ -7,33 +7,52 @@ export function useDashboard() {
     return useContext(DashboardContext);
 }
 
-
 export const DashboardProvider = ({children}) => {
+    // for widget state
     const [widgets, setWidgets] = useState([]);
     const [counter, setCounter] = useState(0);
 
+    // for layout data (grid-layout)
+    // This is meant to only be used by <Dashboard/>. It is defined here 
+    // because it is convenient to implement save and load.
+
     const addWidget = (w) => {
-        // add optional argument for positional information
-        // this will be required for loading saved configuration.
-        
-        // consider passing in list of widgets
-        w = {...w, uid: counter}
+        w = {...w, id: counter.toString()}
         setWidgets([...widgets, w]);
         setCounter(counter + 1);
     };
 
     const removeWidget = (id) => {
-        const newWidgets = widgets.filter(w => w.uid !== id);
+        const newWidgets = widgets.filter(w => w.id !== id);
         setWidgets(newWidgets);
-    }
+    };
 
-    const printWidget = () => { 
-        console.log("Printing widgets:")
-        console.table(widgets);
-    }
+    const updateWidget = (updatedWidget) => {
+        console.group("DashboardContext.updateWidget()");
+        console.log("updatedWidget:", updatedWidget);
+        const newWidgets = widgets.map(widget => (
+            (widget.id === updatedWidget.id) ? updatedWidget : widget
+        ));
+        console.log("newWidgets:", newWidgets);
+        console.groupEnd();
+        setWidgets(newWidgets);
+    };
+
+    const init = (data) => {
+        let cnt = counter;
+        let newWidgets = data.map((item) => {
+            const w = {...item, id: cnt.toString()};
+            cnt = cnt + 1;
+            return w;
+        });
+        console.log(newWidgets);
+        setWidgets(newWidgets);
+        setCounter(newWidgets.length);
+    };
 
     return (
-        <DashboardContext.Provider value={{ widgets, addWidget, printWidget, removeWidget }}>
+        <DashboardContext.Provider
+            value={{ widgets, addWidget, removeWidget, updateWidget, init }}>
             {children}
         </DashboardContext.Provider>
     );
