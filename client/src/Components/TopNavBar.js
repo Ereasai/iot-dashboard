@@ -1,12 +1,16 @@
 import React, { useContext } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Switch from '@mui/material/Switch';
-import { ThemeContext } from '../ThemeContext';
+
+import {
+    AppBar,
+    Toolbar,
+    Box,
+    Button,
+    Switch
+} from '@mui/material';
+
 import { useTheme } from '@mui/material/styles';
+
+import { ThemeContext } from '../ThemeContext';
 
 const logoUrl = process.env.PUBLIC_URL + '/logo.png';
 
@@ -42,8 +46,8 @@ const TopNavBar = () => {
                         onChange={toggleTheme}
                         inputProps={{ 'aria-label': 'controlled' }}
                     />
-                    <Button color="primary" variant="outlined">Save</Button>
-                    <Button color="secondary" variant="contained">Log In</Button>
+                    <Button color="primary" variant="outlined" disabled={true}>Save</Button>
+                    <Button color="secondary" variant="contained" disabled={true}>Log In</Button>
                 </div>
             </Toolbar>
         </AppBar>

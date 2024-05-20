@@ -6,6 +6,7 @@ import 'chart.js/auto';
 const options = {
     scales: {
         x: { 
+            display: false, 
             type: 'time',
             ticks: {
                 maxRotation: 0,
@@ -13,6 +14,24 @@ const options = {
                 autoSkip: true,
                 maxTicksLimit: 4,
             }
+        },
+        y: {
+            ticks: {
+                maxRotation: 0,
+                minRotation: 0,
+                autoSkip: true,
+                maxTicksLimit: 4,
+            }
+        }
+    },
+
+    plugins: {
+        // title: {
+        //   display: true,
+        //   text: 'Line Chart Example',
+        // },
+        legend: {
+          display: false, // Hide legend if you want to
         },
     },
 
@@ -32,6 +51,7 @@ const LineChart = ({data}) => {
                     label: point.value_name,
                     data: [],
                     fill: true,
+                    // backgroundColor: 'rgb(75, 192, 192)'
                 };
             }
             acc[point.value_name].data.push({x: point.created_at, y: point.value});

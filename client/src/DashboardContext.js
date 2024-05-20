@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
 
-// DashboardContext: manage the list of widgets
 const DashboardContext = createContext();
 
 export function useDashboard() {
@@ -8,13 +7,16 @@ export function useDashboard() {
 }
 
 export const DashboardProvider = ({children}) => {
-    // for widget state
+    // Widget State 
     const [widgets, setWidgets] = useState([]);
     const [counter, setCounter] = useState(0);
 
-    // for layout data (grid-layout)
+    // Layout State (grid-layout)
     // This is meant to only be used by <Dashboard/>. It is defined here 
     // because it is convenient to implement save and load.
+    const [layouts, setLayouts] = useState({lg: []});
+
+    /* INTERFERACE DEFINITIONS */
 
     const addWidget = (w) => {
         w = {...w, id: counter.toString()}
@@ -28,31 +30,33 @@ export const DashboardProvider = ({children}) => {
     };
 
     const updateWidget = (updatedWidget) => {
-        console.group("DashboardContext.updateWidget()");
-        console.log("updatedWidget:", updatedWidget);
         const newWidgets = widgets.map(widget => (
             (widget.id === updatedWidget.id) ? updatedWidget : widget
         ));
-        console.log("newWidgets:", newWidgets);
-        console.groupEnd();
         setWidgets(newWidgets);
     };
 
     const init = (data) => {
-        let cnt = counter;
-        let newWidgets = data.map((item) => {
-            const w = {...item, id: cnt.toString()};
-            cnt = cnt + 1;
-            return w;
+
+        console.group("DashboardContext.init()");
+
+        // really bad approach, find unused id:
+        // ideally, we normalize the id
+        let max = 0;
+        data.widgets.forEach((widget) => {
+            max = (widget.id > max) ? widget.id : max;
         });
-        console.log(newWidgets);
-        setWidgets(newWidgets);
-        setCounter(newWidgets.length);
+        console.log("max unused id:", max);
+        console.groupEnd();
+
+        setLayouts(data.layouts);
+        setWidgets(data.widgets);
+        setCounter(max + 1);
     };
 
     return (
         <DashboardContext.Provider
-            value={{ widgets, addWidget, removeWidget, updateWidget, init }}>
+            value={{ widgets, setWidgets, addWidget, removeWidget, updateWidget, init, layouts, setLayouts }}>
             {children}
         </DashboardContext.Provider>
     );

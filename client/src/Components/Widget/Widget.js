@@ -29,8 +29,8 @@ const Widget = ({valueID, plotType, timeRange, isRealTime, valueMetadata}) => {
         const timeStart = timeRange.start;
         const timeEnd = timeRange.end;
         
-        const url = (isRealTime) ?  `http://${BACKEND_URL}/get-value-logs/${valueID}`
-        : `http://${BACKEND_URL}/get-value-logs/${valueID}?timeStart=%27${encodeURIComponent(timeStart)}%27&timeEnd=%27${encodeURIComponent(timeEnd)}%27`;
+        const url = (isRealTime) ? `http://${BACKEND_URL}/get-value-logs/${valueID}` :
+        `http://${BACKEND_URL}/get-value-logs/${valueID}?timeStart=%27${encodeURIComponent(timeStart)}%27&timeEnd=%27${encodeURIComponent(timeEnd)}%27`;
         
         // console.log("fetching from", url);
 
@@ -42,7 +42,7 @@ const Widget = ({valueID, plotType, timeRange, isRealTime, valueMetadata}) => {
                 // console.log(data);
                 const rawData = JSON.parse(data);
                 const timeseries = rawData.map((e, index) => {
-                    return {created_at : e.created_at, value_name : valueMetadata.value_name, value : e.value, value_string: e.value_string}
+                    return {created_at : e.created_at, value_name : valueMetadata.value_name, value : e.value, value_string: e.value_string};
                 })
                 // console.log("printing initially fetched data.");
                 // console.log(timeseries);

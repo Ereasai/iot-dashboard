@@ -33,7 +33,7 @@ const centerTextPlugin = {
 const options = {
     responsive: true,
     maintainAspectRatio: false,
-    animation: false,
+    animation: true,
     cutout: '85%', // Makes chart look like a gauge
     plugins: {
         tooltip: {
@@ -78,17 +78,7 @@ const GuageChart = ({data, min, max}) => {
         
     }, [data]);
 
-    // console.log("formattedData:", formattedData);
-
     return <Doughnut data={formattedData} options={options} plugins={[centerTextPlugin]}/>
-
-    // return  <div style={{width: '100%', height: '100%', 
-    //                     display: 'flex', justifyContent: 'center', 
-    //                     alignItems: 'center', fontSize}}>
-                
-    //             {text}
-                
-    //         </div>
 }
 
 export default GuageChart;

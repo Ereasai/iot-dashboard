@@ -1,10 +1,10 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useDashboard } from '../DashboardContext';
 
 // import Graph from './Widget/Graph.js'
 // import BarChart from './Widget/BarChart.js'
-import Widget from './Widget/Widget';
+import Widget from './Widget/WidgetSketch';
 
 // TODO: reconfigure to meet style
 import 'react-grid-layout/css/styles.css';
@@ -17,18 +17,13 @@ import WidgetSketch from './Widget/WidgetSketch';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);   
 
-const Dashboard = forwardRef((props, ref) => {
+const Dashboard = () => {
     
-    const [layouts, setLayouts] = useState({lg: []});
+    // const [layouts, setLayouts] = useState({lg: []});
     
-    const {widgets, updateWidget} = useDashboard();
+    const { widgets, layouts, setLayouts } = useDashboard();
+    const [isResizing, setResizing] = useState(false);
     
-    useImperativeHandle(ref, () => ({
-        getLayouts: () => {
-            return layouts;
-        }
-    }));
-
     useEffect(() => {
         // v3
         console.group("Dashboard.useEffect()");
@@ -41,13 +36,21 @@ const Dashboard = forwardRef((props, ref) => {
                 if (existingLayout) return existingLayout;
                 
                 // create new layout.
+                // the `widget` does not hold positional data anymore.
+                // return {
+                //     i: widget.id,
+                //     x: widget.x || 0,
+                //     y: (widget.y == undefined) ? Infinity : widget.y,
+                //     w: widget.width || 2,
+                //     h: widget.height || 3,
+                // };
+
                 return {
                     i: widget.id,
-                    x: widget.x || 0,
-                    y: (widget.y == undefined) ? Infinity : widget.y,
-                    w: widget.width || 2,
-                    h: widget.height || 3,
-                }
+                    x: 0, y: Infinity,
+                    w: 3, h: 14,
+                    minW: 3, minH: 14,
+                };   
             }),
             // other breakpoints can be defined here.
         };
@@ -56,88 +59,49 @@ const Dashboard = forwardRef((props, ref) => {
         setLayouts(newLayout);
     }, [widgets]);
 
-    const onLayoutChange = (layout, allLayouts) => {
-        // console.group("Dashboard.onLayoutChange()");
-        // console.log("layout:", layout);
-        // if (JSON.stringify(layouts.lg) === JSON.stringify(layout)) return;
-        // layout.forEach(layoutItem => {
-        //     const updatedWidget = {
-        //         ...widgets.find(item => item.id === layoutItem.i),
-        //         x: layoutItem.x,
-        //         y: layoutItem.y,
-        //         width: layoutItem.w,
-        //         height: layoutItem.h,
-        //     };
-        //     updateWidget(updatedWidget); 
-        // });
-        // console.groupEnd();
-        setLayouts(allLayouts);
-    };
+    const onLayoutChange = (layout, allLayouts) => { setLayouts(allLayouts); };
     
-
-
-
     /* RESPONSIVE GRID PROPERTIES */
     const responsiveProps = {
         className: 'dashboard',
         breakpoints: { lg: 1200, /*md: 960, /*sm: 720, xs: 480, xxs: 0*/ },
         cols: { lg: 20, /*md: 7, /*sm: 2, xs: 1, xxs: 1*/ },
-        rowHeight: 100,
+        rowHeight: 20,
         compactType: 'vertical',
 
         draggableHandle: ".drag-handle",
         onLayoutChange: onLayoutChange,
         margin: [10, 10], // Margin between items
         containerPadding: [10, 10], // Padding inside the grid container
+
+        onResizeStart: () => { console.log('resizeStart()'); setResizing(true); },
+        onResizeStop: () => { console.log('resizeEnd()'); setResizing(false); }
     };
-
-
-    // FOR DEBUGGING 
-    const printLayouts = () => {
-        return (
-            <div style={{border: "black 1px"}}>
-                <h2>lg:</h2>
-                <ul>
-                    {layouts.lg.map(layout => {
-                        const str = `i: ${layout.i}, x: ${layout.x}, y: ${layout.y}, w: ${layout.w}, h: ${layout.h}, `
-                        return (<li key={layout.i}>{str}</li>)
-                    })}
-                </ul>
-            </div>
-        )
-    }
 
     const renderCharts = () => {
         return widgets.map((item) => {
-            // console.log("Dashboard.renderCharts(), item:", item)
-            const timeRange = {start: item.startDate, end: item.endDate}
             return (
                 <div key={item.id}>
-
-                    {/* <div style={{ height: '100%', background: '#ebebeb', display: "flex", flexDirection: "column" }}>
-                    <div className='drag-handle'>
-                        i: {item.i}, 
-                        value_id: {item.valueID}
-                    </div>
-                    <Graph valueToGraph={item.valueID}/>
-                </div> */}
-                    <Widget valueID={item.valueID} plotType={item.plotType} isRealTime={item.isRealTime} timeRange={timeRange} valueMetadata={item.valueMetadata}/>
-
+                    <Widget
+                        key={item.id}
+                        tags={item.tags}
+                        value={item.value}
+                    />
                 </div>
-            )
-        })
-    }
+            );
+        });
+    };
 
     return (
         <>
             <ResponsiveGridLayout layouts={layouts} {...responsiveProps}>
                 {renderCharts()}
                 {/* <div key='hello'>
-                    <WidgetSketch/>
+                    <WidgetSketch resizing={isResizing}/>
                 </div> */}
             </ResponsiveGridLayout>
         </>
     );
-});
+};
 
 export default Dashboard;

@@ -1,18 +1,14 @@
 import {useDashboard} from '../DashboardContext'
 
-export const SaveButton = ({ getLayouts }) => {
+export const SaveButton = () => {
 
-    const db = useDashboard();
+    const { layouts, widgets } = useDashboard();
 
     const saveLayoutData = () => {
-        const layouts = getLayouts();
-        const dataToSave = layouts.lg.map(layoutItem => ({
-            ...db.widgets.find(item => item.id === layoutItem.i),
-            x: layoutItem.x,
-            y: layoutItem.y,
-            width: layoutItem.w,
-            height: layoutItem.h,
-        }));
+        const dataToSave = {
+            layouts: layouts,
+            widgets: widgets,
+        };
         console.group("SaveButton.saveLayoutData()");
         console.log("dataToSave:", dataToSave);
         console.groupEnd();
@@ -26,12 +22,12 @@ export const SaveButton = ({ getLayouts }) => {
 
 export const LoadButton = () => {
 
-    const db = useDashboard();
+    const { init } = useDashboard();
 
     const loadLayoutData = () => {
         const dataRaw = localStorage.getItem('dashboardLayout');
         const data = JSON.parse(dataRaw);
-        db.init(data);
+        init(data);
     };
 
     return (
