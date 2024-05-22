@@ -5,7 +5,8 @@ import {
     Toolbar,
     Box,
     Button,
-    Switch
+    Switch,
+    Tooltip
 } from '@mui/material';
 
 import { useTheme } from '@mui/material/styles';
@@ -41,11 +42,12 @@ const TopNavBar = () => {
                     }}
                 />
                 <div style={{display: 'flex', flexDirection: 'row', gap: '10px'}}>
-                    <Switch
-                        label='Toggle Theme'
-                        onChange={toggleTheme}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
+                    <Tooltip title={'Dark Mode'}>
+                        <Switch
+                            onChange={toggleTheme}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                    </Tooltip>
                     <Button color="primary" variant="outlined" disabled={true}>Save</Button>
                     <Button color="secondary" variant="contained" disabled={true}>Log In</Button>
                 </div>
