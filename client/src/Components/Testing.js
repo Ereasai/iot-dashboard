@@ -1,4 +1,4 @@
-import {useDashboard} from '../DashboardContext'
+import {useDashboard} from '../contexts/DashboardContext'
 
 export const SaveButton = () => {
 

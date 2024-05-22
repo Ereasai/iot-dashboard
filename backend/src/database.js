@@ -60,13 +60,10 @@ const getValueTags = async () => {
 	try {
 		return await new Promise( (resolve, reject) => {
 			pool.query(`
-			SELECT
-				name, array_agg(value_id) AS value_ids
-			FROM
-				value_tags
+			SELECT name, array_agg(value_id) AS value_ids
+			FROM value_tags
 			WHERE name NOT IN (SELECT thing_name FROM things)
-			GROUP BY
-				name;
+			GROUP BY name;
 			`, (error, results) => {
 				if (error) reject(error)
 				if (results && results.rows) {

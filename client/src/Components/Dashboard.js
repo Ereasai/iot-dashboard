@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import { useDashboard } from '../DashboardContext';
+
+import { useDashboard } from '../contexts/DashboardContext';
 
 // import Graph from './Widget/Graph.js'
 // import BarChart from './Widget/BarChart.js'
@@ -12,8 +13,7 @@ import 'react-resizable/css/styles.css';
 
 // TODO: defines the widgets here? which is werid.
 // should be in the widgets.
-import './Dashboard.css'
-import WidgetSketch from './Widget/WidgetSketch';
+// import './Dashboard.css'
 
 const ResponsiveGridLayout = WidthProvider(Responsive);   
 
