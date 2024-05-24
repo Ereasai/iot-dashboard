@@ -57,9 +57,8 @@ const GuageChart = ({data, min, max}) => {
     const [formattedData, setFormattedData] = useState({datasets: []});
 
     useEffect(() => {
-        const recent = data[data.length-1];
-        // const recent = recentData === undefined ? {value: 0} : recentData;
-        const value = 100 * (recent.value - min) / (max - min) ;
+        const recent = (data.length == 0) ? 0 : data[data.length-1];
+        const value = 100 * (recent.value - min) / (max - min);
 
         const newData = {
             datasets: [

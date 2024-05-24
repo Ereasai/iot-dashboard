@@ -17,7 +17,7 @@ import 'react-resizable/css/styles.css';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);   
 
-const Dashboard = () => {
+const Grid = () => {
     
     // const [layouts, setLayouts] = useState({lg: []});
     
@@ -104,4 +104,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default Grid;

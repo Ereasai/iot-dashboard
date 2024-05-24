@@ -1,43 +1,21 @@
-import React, { useState } from 'react';
-
-import { DashboardProvider } from './contexts/DashboardContext.js';
-
-import TopNavBar from './components/TopNavBar.js';
-import Dashboard from './components/Dashboard'
-import AddButton from './components/AddButton.js';
-import AddPopup from './components/AddPopupV2/AddPopup.js';
-
-import { SaveButton, LoadButton } from './components/Testing.js';
-
-import { useTheme } from '@mui/material/styles';
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { PrivateRoute } from './components/PrivateRoute';
+import Dashboard from './Dashboard';
+import Login from './Login';
 
 const App = () => {
-    const theme = useTheme();
-
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
-
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: theme.palette.background.default}}>
-            <DashboardProvider>
-                <TopNavBar />
-
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <SaveButton />
-                    <LoadButton />
-                </div>
-
-                <Dashboard/>
-                <AddButton
-                    onClick={() => setIsPopupOpen(true)}
-                    style={{ position: 'fixed', bottom: '20px', right: '20px' }}
-                />
-                <AddPopup
-                    open={isPopupOpen}
-                    onClose={() => setIsPopupOpen(false)}
-                />
-            </DashboardProvider>
-        </div>
-    );
-}
+  return (
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path='/' element={<PrivateRoute element={<Dashboard />} />} />
+          <Route path='/login' element={<Login />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
+  );
+};
 
 export default App;

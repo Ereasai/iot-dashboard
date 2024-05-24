@@ -16,44 +16,65 @@ const pool = new Pool({
 	port: process.env.DB_PORT,
 });
 
+const queryDatabase = async (queryText) => {
+    try {
+        return await new Promise((resolve, reject) => {
+            pool.query(queryText, (error, results) => {
+                if (error) reject(error);
+                if (results && results.rows) {
+                    resolve(results.rows);
+                } else {
+                    reject(new Error("No results found"));
+                }
+            });
+        });
+    } catch (error) {
+        console.error(error);
+        throw new Error("Internal server error");
+    }
+};
+
 const getThings = async () => {
 
-	try {
-		return await new Promise( (resolve, reject) => {
-			pool.query("SELECT * FROM things", (error, results) => {
-				if (error) reject(error)
-				if (results && results.rows) {
-					resolve(results.rows);
-				} else {
-					reject(new Error("No results found"));
-				}
-			})
-		})
-	}
-	catch (error_1) {
-		console.error(error_1);
-		throw new Error("Internal server error");
-	}
+	// try {
+	// 	return await new Promise( (resolve, reject) => {
+	// 		pool.query("SELECT * FROM things", (error, results) => {
+	// 			if (error) reject(error)
+	// 			if (results && results.rows) {
+	// 				resolve(results.rows);
+	// 			} else {
+	// 				reject(new Error("No results found"));
+	// 			}
+	// 		})
+	// 	})
+	// }
+	// catch (error_1) {
+	// 	console.error(error_1);
+	// 	throw new Error("Internal server error");
+	// }
+
+	return queryDatabase('SELECT * FROM things');
 }
 
 const getValueMetadata = async () => {
 
-	try {
-		return await new Promise( (resolve, reject) => {
-			pool.query("SELECT * FROM values", (error, results) => {
-				if (error) reject(error)
-				if (results && results.rows) {
-					resolve(results.rows);
-				} else {
-					reject(new Error("No results found"));
-				}
-			})
-		})
-	}
-	catch (error_1) {
-		console.error(error_1);
-		throw new Error("Internal server error");
-	}
+	// try {
+	// 	return await new Promise( (resolve, reject) => {
+	// 		pool.query("SELECT * FROM values", (error, results) => {
+	// 			if (error) reject(error)
+	// 			if (results && results.rows) {
+	// 				resolve(results.rows);
+	// 			} else {
+	// 				reject(new Error("No results found"));
+	// 			}
+	// 		})
+	// 	})
+	// }
+	// catch (error_1) {
+	// 	console.error(error_1);
+	// 	throw new Error("Internal server error");
+	// }
+	return queryDatabase('SELECT * FROM values');
 };
 
 const getValueTags = async () => {
@@ -130,41 +151,61 @@ const getValueLogs = async (valueID, timeStart, timeEnd) => {
 }
 
 const getValueLogsByThingValue = async (thing, value, interval='1 minute') => {
-	try {
-		return await new Promise((resolve, reject) => {
+	// try {
+	// 	return await new Promise((resolve, reject) => {
 
-			console.log(">>> getValueLogsByThingValue()");
-			console.log("thing:", thing);
-			console.log("value:", value);
+	// 		console.log(">>> getValueLogsByThingValue()");
+	// 		console.log("thing:", thing);
+	// 		console.log("value:", value);
 
-			const query = `
-			SELECT vl.created_at, vl.value, vl.value_string
-			FROM value_logs vl
-			JOIN values v ON v.value_id = vl.value_id
-			JOIN things t ON t.thing_id = v.thing_id
-			WHERE t.thing_name = '${thing}'
-			AND v.value_name = '${value}'
-			AND vl.created_at 
-			BETWEEN (NOW() AT TIME ZONE 'Asia/Seoul' - INTERVAL '${interval}') 
-					AND NOW() AT TIME ZONE 'Asia/Seoul'
-			ORDER BY vl.created_at DESC`;
+	// 		const query = `
+	// 		SELECT vl.created_at, vl.value, vl.value_string
+	// 		FROM value_logs vl
+	// 		JOIN values v ON v.value_id = vl.value_id
+	// 		JOIN things t ON t.thing_id = v.thing_id
+	// 		WHERE t.thing_name = '${thing}'
+	// 		AND v.value_name = '${value}'
+	// 		AND vl.created_at 
+	// 		BETWEEN (NOW() AT TIME ZONE 'Asia/Seoul' - INTERVAL '${interval}') 
+	// 				AND NOW() AT TIME ZONE 'Asia/Seoul'
+	// 		ORDER BY vl.created_at DESC`;
 
-			console.log("query:", query);
+	// 		console.log("query:", query);
 			
-			pool.query(query, (error, results) => {
-				if (error) reject(error)
-				if (results && results.rows) {
-					resolve(results.rows);
-				} else {
-					reject(new Error("No results found"));
-				}
-			})
-		})
-	}
-	catch (error_1) {
-		console.error(error_1);
-		throw new Error("Internal server error");
-	}
+	// 		pool.query(query, (error, results) => {
+	// 			if (error) reject(error)
+	// 			if (results && results.rows) {
+	// 				resolve(results.rows);
+	// 			} else {
+	// 				reject(new Error("No results found"));
+	// 			}
+	// 		})
+	// 	})
+	// }
+	// catch (error_1) {
+	// 	console.error(error_1);
+	// 	throw new Error("Internal server error");
+	// }
+
+	console.log(">>> getValueLogsByThingValue()");
+	console.log("thing:", thing);
+	console.log("value:", value);
+
+	const query = `
+	SELECT vl.created_at, vl.value, vl.value_string
+	FROM value_logs vl
+	JOIN values v ON v.value_id = vl.value_id
+	JOIN things t ON t.thing_id = v.thing_id
+	WHERE t.thing_name = '${thing}'
+	AND v.value_name = '${value}'
+	AND vl.created_at 
+	BETWEEN (NOW() AT TIME ZONE 'Asia/Seoul' - INTERVAL '${interval}') 
+			AND NOW() AT TIME ZONE 'Asia/Seoul'
+	ORDER BY vl.created_at DESC`;
+
+	console.log("query:", query);
+
+	return queryDatabase(query);
 };
 
 const getThingsByValueTags = async (valueName, tagNames) => {

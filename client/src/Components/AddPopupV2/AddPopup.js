@@ -1,22 +1,22 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-    Divider,
-    Grid,
-    Typography,
-    ToggleButtonGroup,
-    ToggleButton,
-    Card,
-    Chip,
-    Box,
-    Backdrop,
-    CircularProgress,
-    IconButton,
-    Grow,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Divider,
+  Grid,
+  Typography,
+  ToggleButtonGroup,
+  ToggleButton,
+  Card,
+  Chip,
+  Box,
+  Backdrop,
+  CircularProgress,
+  IconButton,
+  Grow,
 
 } from '@mui/material';
 
@@ -34,135 +34,138 @@ import { useDashboard } from '../../contexts/DashboardContext';
 const AddPopup = ({ open, onClose }) => {
 
 
-    const [confirmBoxOpen, setConfirmBoxOpen] = useState(false);
-    const [selectedTags, setSelectedTags] = useState([]);
-    const [selectedValueName, setSelectedValueName] = useState('');
-    const [page, setPage] = useState(0);
+  const [confirmBoxOpen, setConfirmBoxOpen] = useState(false);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedValueName, setSelectedValueName] = useState('');
+  const [page, setPage] = useState(0);
 
-    const { addWidget } = useDashboard();
+  const { addWidget } = useDashboard();
 
 
-    // return true if condition to move to next page is met.
-    const conditionForNext = () => {
-        switch (page) {
-            case 0:
-                return selectedTags.length > 0;
-            case 1:
-                return selectedValueName !== '';
-            case 2:
-                return true;
-            default:
-                return true;
-        };
+  // return true if condition to move to next page is met.
+  const conditionForNext = () => {
+    switch (page) {
+      case 0:
+        return selectedTags.length > 0;
+      case 1:
+        return selectedValueName !== '';
+      case 2:
+        return true;
+      default:
+        return true;
     };
+  };
 
-    const handleDone = () => {
-        console.group('AddPopup::handleDone()');
-        const widget = { tags: [...selectedTags], value: selectedValueName };
-        addWidget(widget);
-        console.log("widget:", widget);
-        console.groupEnd();
-        handleCloseConfirm();
-    };
+  const handleDone = () => {
+    console.group('AddPopup::handleDone()');
+    const widget = { tags: [...selectedTags], value: selectedValueName };
+    addWidget(widget);
+    console.log("widget:", widget);
+    console.groupEnd();
+    handleCloseConfirm();
+  };
 
-    const handleCloseConfirm = () => {
-        setPage(0);
-        setSelectedTags([]);
-        setSelectedValueName('');
-        setConfirmBoxOpen(false);
-        onClose();
-    };
+  const handleCloseConfirm = () => {
+    setPage(0);
+    setSelectedTags([]);
+    setSelectedValueName('');
+    setConfirmBoxOpen(false);
+    onClose();
+  };
 
-    return (
-        <>
-            <Dialog
-                open={open}
-                onClose={() => setConfirmBoxOpen(true)}
-                fullWidth
-                maxWidth="md"
-                TransitionComponent={Grow}
+  return (
+    <>
+      <Dialog
+        open={open}
+        onClose={() => setConfirmBoxOpen(true)}
+        fullWidth
+        maxWidth="md"
+        TransitionComponent={Grow}
+      >
+        <DialogTitle>
+          <Typography variant='h4'>Add a new Widget.</Typography>
+          <IconButton
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+            }}
+            onClick={() => setConfirmBoxOpen(true)}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <Card hidden={true}>
+          <Typography variant='body1'>selectedTags: {selectedTags.join(', ')}</Typography>
+          <Typography variant='body1'>selectedValueName: {selectedValueName}</Typography>
+        </Card>
+
+        {page == 0 &&
+          <Page1
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+            setSelectedValueName={setSelectedValueName}
+          />}
+        {page == 1 &&
+          <Page2
+            selectedTags={selectedTags}
+            selectedValueName={selectedValueName}
+            setSelectedValueName={setSelectedValueName}
+          />}
+        {page == 2 &&
+          <Page3
+            selectedTags={selectedTags}
+            selectedValueName={selectedValueName}
+            setSelectedTags={setSelectedTags}
+          />}
+        {page == 3 &&
+          <Page4 />}
+
+        <DialogActions>
+          {page > 0 &&
+            <Button onClick={() => setPage(page - 1)}>
+              Prev
+            </Button>}
+
+          {page < 3 &&
+            <Button
+              variant='contained'
+              onClick={() => setPage(page + 1)}
+              disabled={!conditionForNext()}
             >
-                <DialogTitle>
-                    <Typography variant='h4'>Add a new Widget.</Typography>
-                    <IconButton 
-                        sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
-                        }}
-                        onClick={() => setConfirmBoxOpen(true)}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </DialogTitle>
+              Next
+            </Button>}
 
-                <Card hidden={true}>
-                    <Typography variant='body1'>selectedTags: {selectedTags.join(', ')}</Typography>
-                    <Typography variant='body1'>selectedValueName: {selectedValueName}</Typography>
-                </Card>
-                
-                {page == 0 && <Page1 selectedTags={selectedTags} 
-                                     setSelectedTags={setSelectedTags}
-                                     setSelectedValueName={setSelectedValueName}
-                              />
-                }
-                {page == 1 && <Page2 selectedTags={selectedTags} 
-                                     selectedValueName={selectedValueName} 
-                                     setSelectedValueName={setSelectedValueName}
-                              />
-                }
-                {page == 2 && <Page3 selectedTags={selectedTags} 
-                                     selectedValueName={selectedValueName} 
-                                     setSelectedTags={setSelectedTags}
-                              />
-                }
-                {page == 3 && <Page4 />
-                }
-            
-                <DialogActions>
-                    {page > 0 && 
-                    <Button onClick={() => setPage(page - 1)}>
-                        Prev
-                    </Button>}
-
-                    {page < 3 && 
-                    <Button 
-                        variant='contained' 
-                        onClick={() => setPage(page + 1)}
-                        disabled={!conditionForNext()}
-                    >
-                        Next
-                    </Button>}
-
-                    {page == 3 && 
-                    <Button 
-                        variant='contained' 
-                        color='success'
-                        onClick={handleDone}
-                    >
-                        Done
-                    </Button>}
-                </DialogActions>
-            </Dialog>
-
-            {/* Close Confirmation Box */}
-            <Dialog
-                open={confirmBoxOpen}
-                onClose={() => setConfirmBoxOpen(false)}
+          {page == 3 &&
+            <Button
+              variant='contained'
+              color='success'
+              onClick={handleDone}
             >
-                <DialogTitle>Are you sure?</DialogTitle>
-                <DialogContent>
-                    <Typography variant='body1'>
-                        Your progress will be lost.
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseConfirm} color='error'>Yes</Button>
-                    <Button onClick={() => setConfirmBoxOpen(false)}>No</Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
+              Done
+            </Button>}
+        </DialogActions>
+      </Dialog>
+
+      {/* Close Confirmation Box */}
+      <Dialog
+        open={confirmBoxOpen}
+        onClose={() => setConfirmBoxOpen(false)}
+      >
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogContent>
+          <Typography variant='body1'>
+            Your progress will be lost.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirm} color='error'>Yes</Button>
+          <Button onClick={() => setConfirmBoxOpen(false)}>No</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 };
 
 export default AddPopup;
