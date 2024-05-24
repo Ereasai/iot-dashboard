@@ -9,7 +9,12 @@ const AddButton = ({ onClick, style }) => {
     const theme = useTheme();
 
     return (
-        <Fab color={theme.palette.base.main} aria-label="add" style={style} onClick={onClick}>
+        <Fab 
+            color={theme.palette.base.main} 
+            aria-label="add" 
+            style={style} 
+            onClick={onClick}
+        >
             <AddIcon/>
         </Fab>
     )
