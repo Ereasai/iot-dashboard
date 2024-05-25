@@ -31,6 +31,8 @@ import Page4 from './Page4';
 
 import { useDashboard } from '../../contexts/DashboardContext';
 
+const BACKEND_URL = process.env.REACT_APP_PUBLIC_IP
+
 const AddPopup = ({ open, onClose }) => {
 
 
@@ -39,7 +41,7 @@ const AddPopup = ({ open, onClose }) => {
   const [selectedValueName, setSelectedValueName] = useState('');
   const [page, setPage] = useState(0);
 
-  const { addWidget } = useDashboard();
+  const { addWidgets } = useDashboard();
 
 
   // return true if condition to move to next page is met.
@@ -56,11 +58,36 @@ const AddPopup = ({ open, onClose }) => {
     };
   };
 
+  /**
+   * Handler for when done is pressed. New widget should be added and close the
+   * <Dialog> box.
+   */
   const handleDone = () => {
+
+    const createAndAddWidgets = async () => {
+      const args = `valueName=${selectedValueName}&tagNames=${selectedTags.join(',')}`;
+      const response = await fetch(`http://${BACKEND_URL}/get-things-by-value-tags?${args}`);
+      const data = await response.json();
+      const things = data.map(({ thing_name }) => thing_name);
+      
+      console.log('things:', things);
+
+      const ws = things.map(thing => ({
+        type: 'plot',
+        thingName: thing, 
+        valueName: selectedValueName
+      }));
+
+      console.log('ws:', ws);
+
+      addWidgets(ws);
+    };
+
     console.group('AddPopup::handleDone()');
-    const widget = { tags: [...selectedTags], value: selectedValueName };
-    addWidget(widget);
-    console.log("widget:", widget);
+    // const widget = { tags: [...selectedTags], value: selectedValueName };
+    // addWidget(widget);
+    // console.log("widget:", widget);
+    createAndAddWidgets();
     console.groupEnd();
     handleCloseConfirm();
   };

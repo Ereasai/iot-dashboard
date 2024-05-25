@@ -5,27 +5,57 @@ import 'chart.js/auto';
 
 const options = {
   animation: {
-    duration: 100, 
+    duration: 500,
     easing: 'easeInOutQuad',
+  },
+  layout: {
+    padding: {
+      top: 20,
+      bottom: 0,
+      // right: 10,
+      left: 0
+    }
   },
   scales: {
     x: {
-      display: true,
+      display: false,
       type: 'time',
       ticks: {
+        padding: 0,
         maxRotation: 0,
         minRotation: 0,
         autoSkip: true,
         maxTicksLimit: 4,
-      }
+        font: {
+          size: 10
+        }
+      },
+      grid: {
+        display: false,
+      },
+      border: {
+        color: 'rgba(0,0,0,255)',
+        display: false
+      },
     },
     y: {
+      display: false,
       ticks: {
+        padding: 0,
         maxRotation: 0,
         minRotation: 0,
         autoSkip: true,
         maxTicksLimit: 4,
-      }
+        font: {
+          size: 10
+        }
+      },
+      grid: {
+        display: false,
+      },
+      border: {
+        display: false,
+      },
     }
   },
 
@@ -43,6 +73,10 @@ const options = {
   maintainAspectRatio: false
 }
 
+/**
+ * 
+ * @param {*} data The data to plot.
+ */
 const LineChart = ({ data }) => {
   const [formattedData, setFormattedData] = useState({ datasets: [] });
 
@@ -56,8 +90,8 @@ const LineChart = ({ data }) => {
           fill: true,
 
           // smooth interpolation
-          tension: 0.1, 
-          cubicInterpolationMode: 'monotone', 
+          // tension: 0.1,
+          // cubicInterpolationMode: 'monotone',
 
           // hide data points
           pointRadius: 0,
@@ -65,7 +99,6 @@ const LineChart = ({ data }) => {
 
           // line width
           borderWidth: 1,
-          
         };
       }
       acc[point.value_name].data.push({ x: point.created_at, y: point.value });
@@ -79,7 +112,9 @@ const LineChart = ({ data }) => {
 
   }, [data]);
 
-  return <Line options={options} data={formattedData} />;
+  return (
+    <Line options={options} data={formattedData} />
+  );
 }
 
 export default LineChart;

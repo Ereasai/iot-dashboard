@@ -17,8 +17,8 @@ import { alpha, margin, padding, positions, styled } from '@mui/system';
 
 import { useTheme } from '@mui/material/styles';
 
-import LineChart from './LineChart';
-import GuageChart from './GaugeChart';
+import LineChart from './Plots/LineChart';
+import GuageChart from './Plots/GaugeChart';
 
 const ScrollContainerV2 = ({ children, style }) => {
   const handleScroll = (event) => {

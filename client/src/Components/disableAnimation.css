@@ -1,0 +1,15 @@
+/* Disable transitions and animations */
+.react-grid-item {
+    transition: none !important;
+    animation: none !important;
+}
+
+.react-grid-placeholder {
+    transition: none !important;
+    animation: none !important;
+}
+
+.react-resizable {
+    transition: none !important;
+    animation: none !important;
+}

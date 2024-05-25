@@ -18,10 +18,30 @@ export const DashboardProvider = ({ children }) => {
 
   /* INTERFERACE DEFINITIONS */
 
+  /**
+   * Adds a **single** widget to the widget list.
+   * @param {Object} w Widget object.
+   */
   const addWidget = (w) => {
     w = { ...w, id: counter.toString() }
     setWidgets([...widgets, w]);
     setCounter(counter + 1);
+  };
+
+  /**
+   * Adds multiple widgets to the widget list.
+   * @param {Object} w List of widget objects.
+   */
+  const addWidgets = (ws) => {
+    const withId = ws.map((w, index) => {
+      if (w.type == undefined) throw Error('Must specify \'type\'.');
+      
+      const id = counter + index;
+      return { ...w, id: id.toString() };
+    });
+
+    setWidgets([...widgets, ...withId]);
+    setCounter(counter + ws.length);
   };
 
   const removeWidget = (id) => {
@@ -58,6 +78,7 @@ export const DashboardProvider = ({ children }) => {
     widgets,
     setWidgets, 
     addWidget,
+    addWidgets,
     removeWidget,
     updateWidget,
     init,
