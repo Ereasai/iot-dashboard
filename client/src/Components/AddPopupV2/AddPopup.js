@@ -30,8 +30,10 @@ import Page3 from './Page3';
 import Page4 from './Page4';
 
 import { useDashboard } from '../../contexts/DashboardContext';
+import { DEFAULT_WIDGET_SETTINGS } from '../Widget/LivePlotWidget/LivePlotWidget';
 
 const BACKEND_URL = process.env.REACT_APP_PUBLIC_IP
+
 
 const AddPopup = ({ open, onClose }) => {
 
@@ -64,6 +66,8 @@ const AddPopup = ({ open, onClose }) => {
    */
   const handleDone = () => {
 
+    /** Create widgets based on selected tags and value name.
+     **/
     const createAndAddWidgets = async () => {
       const args = `valueName=${selectedValueName}&tagNames=${selectedTags.join(',')}`;
       const response = await fetch(`http://${BACKEND_URL}/get-things-by-value-tags?${args}`);
@@ -72,8 +76,11 @@ const AddPopup = ({ open, onClose }) => {
       
       console.log('things:', things);
 
+      // create list of plot widget objects.
       const ws = things.map(thing => ({
+        ...DEFAULT_WIDGET_SETTINGS,
         type: 'plot',
+        plotType: 'line',
         thingName: thing, 
         valueName: selectedValueName
       }));
@@ -84,19 +91,18 @@ const AddPopup = ({ open, onClose }) => {
     };
 
     console.group('AddPopup::handleDone()');
-    // const widget = { tags: [...selectedTags], value: selectedValueName };
-    // addWidget(widget);
-    // console.log("widget:", widget);
     createAndAddWidgets();
     console.groupEnd();
     handleCloseConfirm();
   };
 
   const handleCloseConfirm = () => {
+    // reset all form values.
     setPage(0);
     setSelectedTags([]);
     setSelectedValueName('');
     setConfirmBoxOpen(false);
+
     onClose();
   };
 

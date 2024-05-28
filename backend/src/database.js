@@ -150,7 +150,7 @@ const getValueLogs = async (valueID, timeStart, timeEnd) => {
 	}
 }
 
-const getValueLogsByThingValue = async (thing, value, interval='1 minute') => {
+const getValueLogsByThingValue = async (thing, value, interval, start, end, latest) => {
 	// try {
 	// 	return await new Promise((resolve, reject) => {
 
@@ -190,18 +190,51 @@ const getValueLogsByThingValue = async (thing, value, interval='1 minute') => {
 	console.log(">>> getValueLogsByThingValue()");
 	console.log("thing:", thing);
 	console.log("value:", value);
+	console.log("interval:", interval);
+	console.log("start:", start);
+	console.log("end:", end);
+	
+	let query = '';
 
-	const query = `
-	SELECT vl.created_at, vl.value, vl.value_string
-	FROM value_logs vl
-	JOIN values v ON v.value_id = vl.value_id
-	JOIN things t ON t.thing_id = v.thing_id
-	WHERE t.thing_name = '${thing}'
-	AND v.value_name = '${value}'
-	AND vl.created_at 
-	BETWEEN (NOW() AT TIME ZONE 'Asia/Seoul' - INTERVAL '${interval}') 
-			AND NOW() AT TIME ZONE 'Asia/Seoul'
-	ORDER BY vl.created_at DESC`;
+	if (interval) {
+		query = `
+		SELECT vl.created_at, vl.value, vl.value_string
+		FROM value_logs vl
+		JOIN values v ON v.value_id = vl.value_id
+		JOIN things t ON t.thing_id = v.thing_id
+		WHERE t.thing_name = '${thing}'
+		AND v.value_name = '${value}'
+		AND vl.created_at 
+		BETWEEN (NOW() AT TIME ZONE 'Asia/Seoul' - INTERVAL '${interval}') 
+				AND NOW() AT TIME ZONE 'Asia/Seoul'
+		ORDER BY vl.created_at DESC`;
+	} 
+	else if (latest) {
+		query = `
+		SELECT vl.created_at, vl.value, vl.value_string 
+		FROM value_logs vl
+		JOIN values v ON v.value_id = vl.value_id
+		JOIN things t ON t.thing_id = v.thing_id
+		WHERE t.thing_name = '${thing}'
+		AND v.value_name = '${value}'
+		ORDER BY vl.created_at DESC
+		LIMIT 1;`;
+	}
+	else {
+		query = `
+		SELECT vl.created_at, vl.value, vl.value_string
+		FROM value_logs vl
+		JOIN values v ON v.value_id = vl.value_id
+		JOIN things t ON t.thing_id = v.thing_id
+		WHERE t.thing_name = '${thing}'
+		AND v.value_name = '${value}'
+		AND vl.created_at 
+		BETWEEN '${start}'
+			AND '${end}'
+		ORDER BY vl.created_at DESC`;
+	}
+
+	
 
 	console.log("query:", query);
 

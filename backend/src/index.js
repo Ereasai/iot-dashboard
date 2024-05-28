@@ -39,8 +39,8 @@ app.get('/get-value-logs/:valueID', (req, res) => {
 });
 
 app.get('/get-value-logs-by-thing-value', (req, res) => {
-	const { thing, value, interval } = req.query
-	handleDatabaseOperation(() => database.getValueLogsByThingValue(thing, value, interval))(req, res);
+	const { thing, value, interval, start, end, latest } = req.query
+	handleDatabaseOperation(() => database.getValueLogsByThingValue(thing, value, interval, start, end, latest))(req, res);
 });
 
 

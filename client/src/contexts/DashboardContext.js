@@ -44,6 +44,12 @@ export const DashboardProvider = ({ children }) => {
     setCounter(counter + ws.length);
   };
 
+  // find widget by id, returns undefined if it's not there.
+  const getWidget = (id) => {
+    return widgets.find(w => w.id === id);
+  }
+  
+
   const removeWidget = (id) => {
     const newWidgets = widgets.filter(w => w.id !== id);
     setWidgets(newWidgets);
@@ -76,13 +82,17 @@ export const DashboardProvider = ({ children }) => {
 
   const value = {
     widgets,
-    setWidgets, 
+    layouts,
+
     addWidget,
     addWidgets,
+    getWidget,
     removeWidget,
     updateWidget,
     init,
-    layouts,
+
+    // state modifiers
+    setWidgets, 
     setLayouts
   };
 
