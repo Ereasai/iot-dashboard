@@ -10,7 +10,12 @@ import { useTheme } from '@mui/material/styles';
 /**
  * Parent class for all widgets. It will provide a drag handle and settings button.
  */
-const Widget = ({ children, title, id, openSettings }) => {
+const Widget = ({ 
+  children, 
+  id, 
+  title, 
+  openSettings, 
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
   const [isHovered, setIsHovered] = useState(false);
@@ -27,7 +32,7 @@ const Widget = ({ children, title, id, openSettings }) => {
     <Card
       component='div'
       variant='elevation'
-      style={{
+      sx={{
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
@@ -52,6 +57,8 @@ const Widget = ({ children, title, id, openSettings }) => {
           backgroundColor: theme.palette.secondary.main,
           zIndex: 0,
 
+          userSelect: 'none',
+
           ...hoverStyle
         }}
       >
@@ -69,9 +76,10 @@ const Widget = ({ children, title, id, openSettings }) => {
         </style>
         <Typography
           variant='caption'
+          noWrap
           sx={{
-            whiteSpace: 'nowrap',
-            // animation: 'scrollText 5s linear infinite'
+            paddingLeft: 1.5,
+            paddingRight: 1.5,
           }}
         >
           {title}
@@ -81,14 +89,17 @@ const Widget = ({ children, title, id, openSettings }) => {
       <IconButton
         aria-label='action menu'
         size='small'
-        onClick={(event) => setAnchorEl(event.currentTarget)}
+        onClick={(event) => {
+          setAnchorEl(event.currentTarget);
+          setIsHovered(false);
+        }}
         sx={{
           position: 'absolute', 
-          top: 20, right: 0,
+          top: 0, right: 0,
           ...hoverStyle
         }}
       >
-        <MoreVertIcon />
+        <MoreVertIcon style={{ fontSize: '10px', transform: 'scale(1.5)' }}/>
       </IconButton>
 
       <Menu
@@ -100,10 +111,13 @@ const Widget = ({ children, title, id, openSettings }) => {
         <MenuList
           dense
         >
-          <MenuItem onClick={() => {
-            openSettings(); // open setting
-            setAnchorEl(null); // close the menu
-          }}>
+          <MenuItem 
+            onClick={() => {
+              openSettings(); // open setting
+              setAnchorEl(null); // close the menu
+            }}
+            disabled={openSettings == undefined}
+          >
             <ListItemText>Edit</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => {

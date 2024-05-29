@@ -9,6 +9,7 @@ import LivePlotWidget from './Widget/LivePlotWidget/LivePlotWidget';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import './disableAnimation.css'
+import StaticTextWidget from './Widget/StaticTextWidget/StaticTextWidget';
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -81,14 +82,12 @@ const Grid = () => {
             <LivePlotWidget 
               isResizing={isResizing}
               {...item}
-              // id={item.id}
-              // plotType={item.plotType}
-              // valueName={item.valueName}
-              // thingName={item.thingName}
             />
           );    
-        case 'plot-group':
-          return <p>plot group</p>
+        case 'staticText':
+          return (
+            <StaticTextWidget {...item} />
+          );
       }
     };
 

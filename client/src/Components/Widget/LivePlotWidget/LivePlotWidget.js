@@ -47,8 +47,6 @@ const LivePlotWidget = ({
   const fetchData = async () => {
 
     const thingValueArg = `thing=${thingName}&value=${valueName}`;
-
-    console.log(plotType === 'gauge')
     
     const isGuage = (plotType === 'gauge')
 

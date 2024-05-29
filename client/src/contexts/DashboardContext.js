@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const DashboardContext = createContext();
 
@@ -35,7 +35,7 @@ export const DashboardProvider = ({ children }) => {
   const addWidgets = (ws) => {
     const withId = ws.map((w, index) => {
       if (w.type == undefined) throw Error('Must specify \'type\'.');
-      
+
       const id = counter + index;
       return { ...w, id: id.toString() };
     });
@@ -48,7 +48,7 @@ export const DashboardProvider = ({ children }) => {
   const getWidget = (id) => {
     return widgets.find(w => w.id === id);
   }
-  
+
 
   const removeWidget = (id) => {
     const newWidgets = widgets.filter(w => w.id !== id);
@@ -80,6 +80,13 @@ export const DashboardProvider = ({ children }) => {
     setCounter(max + 1);
   };
 
+  useEffect(() => {
+    const dataRaw = localStorage.getItem('dashboardLayout');
+    const data = JSON.parse(dataRaw);
+    init(data);
+
+  }, [])
+
   const value = {
     widgets,
     layouts,
@@ -92,7 +99,7 @@ export const DashboardProvider = ({ children }) => {
     init,
 
     // state modifiers
-    setWidgets, 
+    setWidgets,
     setLayouts
   };
 
