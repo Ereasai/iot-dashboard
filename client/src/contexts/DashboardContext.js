@@ -65,7 +65,6 @@ export const DashboardProvider = ({ children }) => {
   const init = (data) => {
 
     console.group("DashboardContext.init()");
-
     // really bad approach, find unused id:
     // ideally, we normalize the id
     let max = 0;
@@ -83,7 +82,7 @@ export const DashboardProvider = ({ children }) => {
   useEffect(() => {
     const dataRaw = localStorage.getItem('dashboardLayout');
     const data = JSON.parse(dataRaw);
-    init(data);
+    if (data) init(data);
 
   }, [])
 
@@ -104,8 +103,7 @@ export const DashboardProvider = ({ children }) => {
   };
 
   return (
-    <DashboardContext.Provider
-      value={value}>
+    <DashboardContext.Provider value={value}>
       {children}
     </DashboardContext.Provider>
   );
