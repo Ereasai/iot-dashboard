@@ -315,7 +315,7 @@ const PlotSelect = ({ value, setValue }) => {
 const QueryIntervalSelect = ({ value, setValue }) => {
 
   const [open, setOpen] = useState(false);
-  const [unit, setUnit] = useState('seconds');
+  const [unit, setUnit] = useState('');
   const [amount, setAmount] = useState(0);
 
   useEffect(() => {

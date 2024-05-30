@@ -37,10 +37,9 @@ const BACKEND_URL = process.env.REACT_APP_PUBLIC_IP
 
 const AddLivePlot = ({ onAttemptClose, onClose }) => {
 
-
-  // const [confirmBoxOpen, setConfirmBoxOpen] = useState(false);
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedValueName, setSelectedValueName] = useState('');
+  const [widgetData, setWidgetData] = useState(DEFAULT_WIDGET_SETTINGS);
   const [page, setPage] = useState(0);
 
   const { addWidgets } = useDashboard();
@@ -79,8 +78,8 @@ const AddLivePlot = ({ onAttemptClose, onClose }) => {
       // create list of plot widget objects.
       const ws = things.map(thing => ({
         ...DEFAULT_WIDGET_SETTINGS,
+        ...widgetData,
         type: 'plot',
-        plotType: 'line',
         thingName: thing,
         valueName: selectedValueName
       }));
@@ -100,7 +99,7 @@ const AddLivePlot = ({ onAttemptClose, onClose }) => {
   return (
     <>
       <DialogTitle>
-        <Typography variant='h4'>
+        <Typography fontSize='3rem'>
           Add a new Live Plot
         </Typography>
         <IconButton
@@ -143,7 +142,10 @@ const AddLivePlot = ({ onAttemptClose, onClose }) => {
         />
       }
       {page == 3 &&
-        <Page4 />
+        <Page4 
+          input={widgetData}
+          setInput={setWidgetData}
+        />
       }
 
       <DialogActions>

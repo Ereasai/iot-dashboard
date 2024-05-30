@@ -10,11 +10,11 @@ import Widget from '../WidgetV3';
 const BACKEND_URL = process.env.REACT_APP_PUBLIC_IP
 
 export const DEFAULT_WIDGET_SETTINGS = {
-  plotType: '',
+  plotType: 'line',
 
   isRealTime: true,
   realTimeInterval: '5minute',
-  refreshRate: 500,
+  refreshRate: 2000,
   historicInterval: {start: 'n/a', end: 'n/a'},
 
   // settings that are not common between the plots
