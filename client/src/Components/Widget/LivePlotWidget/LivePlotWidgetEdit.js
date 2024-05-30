@@ -35,7 +35,7 @@ const LivePlotWidgetEdit = ({ id, open, onClose }) => {
     >
       {/* debug only */}
       <Card
-        hidden={false}
+        hidden={true}
         sx={{
           // position: 'absolute',
           // top: -10
