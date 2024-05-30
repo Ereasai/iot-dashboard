@@ -6,6 +6,7 @@ import LivePlotWidgetEdit from './LivePlotWidgetEdit';
 import LineChart from './Plots/LineChart';
 import GaugeChart from './Plots/GaugeChart';
 import Widget from '../WidgetV3';
+import TextChart from './Plots/TextChart';
 
 const BACKEND_URL = process.env.REACT_APP_PUBLIC_IP
 
@@ -52,10 +53,18 @@ const LivePlotWidget = ({
     const thingValueArg = `thing=${thingName}&value=${valueName}`;
     
     const isGuage = (plotType === 'gauge');
+    const isText = (plotType === 'text');
+    let args = undefined;
+    if (isRealTime) {
+      if (isGuage || isText) args = 'latest=true';
+      else args = `interval=${realTimeInterval}`;
+    } else {
+      args = `start=${historicInterval.start}&end=${historicInterval.end}`;
+    }
 
-    const args = (isRealTime && !isGuage) ? `interval=${realTimeInterval}`
-      : isGuage ? `latest=true`
-      : `start=${historicInterval.start}&end=${historicInterval.end}`;
+    // const args = (isRealTime && !isGuage) ? `interval=${realTimeInterval}`
+    //   : isGuage ? `latest=true`
+    //   : `start=${historicInterval.start}&end=${historicInterval.end}`;
 
     const url = `http://${BACKEND_URL}/get-value-logs-by-thing-value?${thingValueArg}&${args}`;
 
@@ -119,6 +128,8 @@ const LivePlotWidget = ({
           data={data} 
           min={settings.gaugeRange.min} max={settings.gaugeRange.max}
         />;
+      case 'text':
+        return <TextChart data={data} />
       default:
         return <Typography>Unknown Component: {plotType}</Typography>
     }
@@ -140,7 +151,7 @@ const LivePlotWidget = ({
     <>
       <Widget 
         id={id}
-        title={`${thingName} (${valueName})`}
+        title={`[live] ${thingName} (${valueName})`}
         openSettings={() => setSettingsOpen(true)}
       >
         {

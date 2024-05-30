@@ -238,6 +238,7 @@ const PlotSelect = ({ value, setValue }) => {
       >
         <MenuItem value='line'>Line</MenuItem>
         <MenuItem value='gauge'>Gauge</MenuItem>
+        <MenuItem value='text'>Text</MenuItem>
 
       </Select>
     </FormControl>
