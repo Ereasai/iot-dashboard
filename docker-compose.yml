@@ -30,8 +30,10 @@ services:
     container_name: crawler
     environment:
       # argument to the crawler
-      HOST: iotdev.snu.ac.kr
-      PORT: 58132
+      # HOST: iotdev.snu.ac.kr
+      # PORT: 58132
+      HOST: 147.46.219.127
+      PORT: 58133
       # argument to connect to db
       DB_HOST: db
       DB_NAME: myssix_db
