@@ -62,18 +62,6 @@ const Widget = ({
           ...hoverStyle
         }}
       >
-        <style>
-          {`
-          @keyframes scrollText {
-            0% {
-              transform: translateX(100%);
-            }
-            100% {
-              transform: translateX(-100%);
-            }
-          }
-        `}
-        </style>
         <Typography
           variant='caption'
           noWrap
@@ -85,7 +73,7 @@ const Widget = ({
           {title}
         </Typography>
       </div>
-
+      
       <IconButton
         aria-label='action menu'
         size='small'

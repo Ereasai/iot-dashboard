@@ -4,12 +4,12 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useDashboard } from '../contexts/DashboardContext';
 
 import LivePlotWidget from './Widget/LivePlotWidget/LivePlotWidget';
+import StaticTextWidget from './Widget/StaticTextWidget/StaticTextWidget';
 
-// TODO: reconfigure to meet style
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import './disableAnimation.css'
-import StaticTextWidget from './Widget/StaticTextWidget/StaticTextWidget';
+
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);

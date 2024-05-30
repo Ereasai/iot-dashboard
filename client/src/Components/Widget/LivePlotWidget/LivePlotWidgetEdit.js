@@ -26,7 +26,7 @@ const LivePlotWidgetEdit = ({ id, open, onClose }) => {
     console.log(input)
     updateWidget(input)
     onClose();
-  }
+  };
 
   return (
     <Dialog
