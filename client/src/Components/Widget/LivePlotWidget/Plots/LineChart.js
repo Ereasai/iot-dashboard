@@ -9,7 +9,7 @@ import { useTheme } from '@mui/material/styles';
  * 
  * @param {*} data The data to plot.
  */
-const LineChart = ({ title, label, data, enableInterpolation=true,  }) => {
+const LineChart = ({ title, label, data, enableInterpolation=true, enableAxisLabels=true }) => {
   const [formattedData, setFormattedData] = useState({ datasets: [] });
 
   const theme = useTheme();
@@ -57,14 +57,14 @@ const LineChart = ({ title, label, data, enableInterpolation=true,  }) => {
       autoPadding: false,
       padding: {
         top: 0,
-        bottom: 0,
-        // right: 10,
+        bottom: (enableAxisLabels) ? 8 : 0,
+        right: (enableAxisLabels) ? 25 : 0,
         left: 0
       }
     },
     scales: {
       x: {
-        display: false,
+        display: enableAxisLabels,
         type: 'time',
         ticks: {
           padding: 0,
@@ -77,36 +77,44 @@ const LineChart = ({ title, label, data, enableInterpolation=true,  }) => {
           }
         },
         grid: {
-          display: false,
+          color: theme.palette.gridLineColor.main,
+          display: true,
         },
         border: {
-          color: 'rgba(0,0,0,255)',
-          display: false
+          color: theme.palette.gridLineColor.main,
+          display: true
         },
       },
       y: {
-        display: false,
+        display: enableAxisLabels,
         ticks: {
           callback: (value, index, ticks) => {
-            if (index == 0) return ''
-            if (index == ticks.length-1) return ''
-            return `${value}`
+
+            const crop = (input) => {
+              const number = parseFloat(input);
+              if (isNaN(number)) return 'NaN';
+              if (Number.isInteger(number)) return number.toString();
+              else return number.toFixed(1);
+            };
+
+            return `${crop(value)}`
           },
           padding: 5,
           maxRotation: 0,
           minRotation: 0,
           autoSkip: true,
           maxTicksLimit: 10,
-          mirror: true,
           font: {
             size: 10
           }
         },
         grid: {
-          display: false,
+          color: theme.palette.gridLineColor.main,
+          display: true,
         },
         border: {
-          display: false,
+          color: theme.palette.gridLineColor.main,
+          display: true,
         },
       }
     },

@@ -15,7 +15,8 @@ const lightTheme = createTheme({
         },
         background: {
             default: '#2596be'
-        }
+        },
+        gridLineColor: { main: undefined },
     },
 });
 
@@ -30,7 +31,8 @@ const darkTheme = createTheme({
         },
         base: {
             main: '#242424',
-        }
+        },
+        gridLineColor: { main: 'rgb(60,60,60)' },
     },
 });
 

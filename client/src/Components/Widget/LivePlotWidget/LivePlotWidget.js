@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { Box, Typography, Alert, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { Typography, Alert } from '@mui/material';
 
 import LivePlotWidgetEdit from './LivePlotWidgetEdit';
 import LineChart from './Plots/LineChart';
@@ -12,7 +12,7 @@ const BACKEND_URL = process.env.REACT_APP_PUBLIC_IP
 export const DEFAULT_WIDGET_SETTINGS = {
   plotType: '',
 
-  isRealTime: false,
+  isRealTime: true,
   realTimeInterval: '5minute',
   refreshRate: 500,
   historicInterval: {start: 'n/a', end: 'n/a'},
@@ -20,9 +20,12 @@ export const DEFAULT_WIDGET_SETTINGS = {
   // settings that are not common between the plots
   settings: {
     enableInterpolation: false,
-    gaugeRange: {min: 0, max: 100}
+    enableAxisLabels: false,
+
+    gaugeRange: {min: 0, max: 100},
+    
   }
-}
+};
 
 const LivePlotWidget = ({ 
   id, 
@@ -30,11 +33,11 @@ const LivePlotWidget = ({
 
   valueName, 
   thingName, 
+
   isRealTime=true, // bool
   realTimeInterval='30minute', // e.g. '3minute' or '1hour'
   historicInterval={start: '2024-05-27', end: '2024-06-01'}, // e.g. {start: 'date_start', end: 'date_end'}
   refreshRate=500, // in ms
-
   
   plotType, 
   settings=DEFAULT_WIDGET_SETTINGS.settings, 
@@ -48,14 +51,13 @@ const LivePlotWidget = ({
 
     const thingValueArg = `thing=${thingName}&value=${valueName}`;
     
-    const isGuage = (plotType === 'gauge')
+    const isGuage = (plotType === 'gauge');
 
     const args = (isRealTime && !isGuage) ? `interval=${realTimeInterval}`
       : isGuage ? `latest=true`
       : `start=${historicInterval.start}&end=${historicInterval.end}`;
 
     const url = `http://${BACKEND_URL}/get-value-logs-by-thing-value?${thingValueArg}&${args}`;
-
 
     const data = await fetch(url)
       .then(response => response.text())
@@ -79,6 +81,10 @@ const LivePlotWidget = ({
   };
 
   useEffect(() => {
+    // NOTE: Consider keeping track of all promises, and canceling them when 
+    // this callback is called. Many HTTP requests may be pending when new 
+    // settings are applied, and user does not see the immediately even though 
+    // the settings are applied. 
     fetchData();
     if (!isRealTime) return;
     const interval = setInterval(() => fetchData(), refreshRate);
@@ -105,19 +111,20 @@ const LivePlotWidget = ({
           label={valueName}
           data={data} 
           enableInterpolation={settings.enableInterpolation} 
-        />
+          enableAxisLabels={settings.enableAxisLabels}
+        />;
       case 'gauge':
-        return <GaugeChart title={thingId} data={data} min={settings.gaugeRange.min} max={settings.gaugeRange.max}/>
+        return <GaugeChart 
+          title={thingId} 
+          data={data} 
+          min={settings.gaugeRange.min} max={settings.gaugeRange.max}
+        />;
       default:
         return <Typography>Unknown Component: {plotType}</Typography>
     }
   };
 
-  const handleClose = () => {
-    // reset form data?
-    setSettingsOpen(false);
-  }
-  
+
 
   const ErrorComponent = () => {
     return (
@@ -162,7 +169,7 @@ const LivePlotWidget = ({
       <LivePlotWidgetEdit 
         id={id}
         open={settingsOpen}
-        onClose={handleClose}
+        onClose={() => setSettingsOpen(false)}
       />
     </>
   );

@@ -94,12 +94,12 @@ const LivePlotWidgetEdit = ({ id, open, onClose }) => {
             // real time
             <>
               <Typography variant='body1'>Real Time Settings</Typography>
-              <QueryIntervalSelect value={input.realTimeInterval} setValue={(val) => 
-          setInput({
-            ...input,
-            realTimeInterval: val
-          })
-        }/>
+              <QueryIntervalSelect value={input.realTimeInterval} setValue={(val) =>
+                setInput({
+                  ...input,
+                  realTimeInterval: val
+                })
+              } />
               {/* <TextField
                 label='Query Interval'
                 helperText='e.g. 3minute, 1hour, or 1day'
@@ -176,23 +176,45 @@ const LivePlotWidgetEdit = ({ id, open, onClose }) => {
 
           <Typography variant='body1'>Plot specific settings</Typography>
 
-          {(input.plotType === 'line') &&
-            <FormControlLabel
-              label='Enable Interpolation'
-              control={
-                <Switch
-                  checked={input.settings.enableInterpolation}
-                  onChange={(e) => setInput({
-                    ...input,
-                    settings: {
-                      ...input.settings,
-                      enableInterpolation: e.target.checked
-                    }
-                  })}
-                />}
-            />
+          {/* line plot config */}
+          {
+            (input.plotType === 'line') &&
+            <>
+              <FormControlLabel
+                label='Line Interpolation'
+                control={
+                  <Switch
+                    checked={input.settings.enableInterpolation}
+                    onChange={(e) => setInput({
+                      ...input,
+                      settings: {
+                        ...input.settings,
+                        enableInterpolation: e.target.checked
+                      }
+                    })}
+                  />
+                }
+              />
+
+              <FormControlLabel
+                label='Axis Labels'
+                control={
+                  <Switch
+                    checked={input.settings.enableAxisLabels}
+                    onChange={(e) => setInput({
+                      ...input,
+                      settings: {
+                        ...input.settings,
+                        enableAxisLabels: e.target.checked
+                      }
+                    })}
+                  />
+                }
+              />
+            </>
           }
 
+          {/* guage plot config */}
           {
             (input.plotType === 'gauge') &&
             <>
@@ -316,10 +338,10 @@ const QueryIntervalSelect = ({ value, setValue }) => {
           setValue(`${a}${unit}`);
         }}
       />
-      <FormControl sx={{ minWidth: 120, maxWidth: 120,  }}>
+      <FormControl sx={{ minWidth: 120, maxWidth: 120, }}>
         <InputLabel id='unit-select-label'>Unit</InputLabel>
         <Select
-        
+
           labelId='unit-select-label'
           open={open}
           size='small'
